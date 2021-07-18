@@ -1,0 +1,681 @@
+/*----------------------------=- C O M A N D A -=-------------------------------------
+
+ CRIAR UM SOFTWARE EM LINGUAGEM C, USANDO DEV C++ PARA GERENCIAMENTO DE UM PETSHOP
+
+Neste software deve ser possível cadastrar até 100 animais.  OK
+Deve haver um menu (aprender a usar a funcao getch())  OK
+Deve haver uma tela para cadastrar, editar e excluir animais  OK
+Deve ter uma tela para cadastrar os banhos do animal (utilizar uma struct dentro da outra) OK
+Deve haver a opção de gerar uma relatório de todos os animais cadastrados e de seus banhos OK
+Deve haver uma opção para gerar o relatório dos banhos tomados por um animal específico 
+Deve haver uma opção para gerar o relatório de animais que estão a mais de 10 dias sem tomar banho. (usar biblioteca time.h)
+
+CRITÉRIOS:
+Todas as linhas devem ser comentadas
+Deve ser apresentado no dia 28/11/2019 às 13:50
+A apresentação deve demonstrar as funcionalidades do sistema.
+Deve ser entregue uma cópia do arquivo de código via GoogleClass
+
+O cadastro dos animais deve conter:
+Numero de identificação (ID)
+Nome do dono
+Telefone para contato
+Especie do animal
+Nome do animal
+Raca
+Sexo
+idade do animal em Anos e Meses !!!
+
+-------------------------------------------------------------------------------------*/
+
+
+
+/* -----------------------=- DECLARAÇAO DE BIBLIOTECAS -=--------------------------- */
+#include <conio.h> // Para desenhar tela, manipular caracteres
+#include <stdio.h> // Para usar printf scanf
+#include <string.h> // Para utilizar strcpy
+#include <locale.h> // Para acentuação
+#include <stdlib.h> //Emulador so prompt do sistema operacional
+#include <time.h> //Para a data
+#include <unistd.h> //Biblioteca para a função Sleep
+/* ------------------------------------------------------ */
+
+
+
+/* ----------=- DECLARAÇAO DE VARIAVEIS GLOBAIS -=------- */
+
+typedef struct {  // Declarar uma estrutura
+	
+	int dia; //Dias
+	int mes; //Mês
+	int ano; //Ano
+
+}Databanho;  // Criação de um novo tipo
+
+typedef struct // Declarar uma estrutura
+{
+	char dono[30];			// Nome do proprietaria
+	char cell[20];			// Celular do Dono
+	char nick[20];			// Nome do "TOTO"
+	char esp [20];			// Especia animal
+	char raca[20];			// Raça do animal
+	char sexo[20];			// Sexo do animal
+	int  idade;				// Idade do animal
+	int  ID;				// Numero de Identificação
+	Databanho banho[8];	//Data do Banho
+		
+	
+} Cadastro; //Criação de um novo tipo
+
+Cadastro pet[100] = {};  //Criação de uma variável do tipo cadastro
+
+typedef struct  //Declarar uma variável para o código todo
+{
+	int IDbusca;   //Variável Global para buscar
+	int IDeditar;  //Variável Global para editar
+	int Save_i;    //Variável Global para salvar
+	int dia,mes,ano; //Varuável Global da data
+	
+}All; // Criação de um novo tipo
+
+All geral = {}; //Criação de uma nova variável do tipo geral
+
+//------------------------------------------------------------- 
+
+// ! ! ! ! ! ! ! ! ! ! ! ! !  ! ! ! NAO FOI RALIZADO O ATIVIDADE PROPOSTA ! ! ! ! ! ! ! ! ! ! ! !  ! ! ! ! ! ! ! ! ! ! ! ! ! ! 
+
+// "Deve haver uma opção para gerar o relatório de animais que estão a mais de 10 dias sem tomar banho. (usar biblioteca time.h)"
+
+// ! ! ! ! ! ! ! ! ! ! ! !  ! ! ! ! ! ! ! ! ! ! ! ! ! ! !  ! ! ! ! ! ! ! ! ! ! ! ! ! ! !  ! ! ! ! ! ! ! ! ! ! ! ! ! ! !  ! ! !
+
+// ------------------- MENU PRINCIPAL -----------------------
+
+
+int main () //Função principal
+{
+
+ void cadastro(void),relatorio(void),busca(void),editar(void),banhos(void),relatB(void); //Declarar as funções sem retorno utilizadas
+// ----------------------- TESTES ---------------------------
+
+strcpy(pet[0].dono, "Fulano de Tal"); //Cadastro para TESTE
+strcpy(pet[0].cell, "(44)99935-1725"); //Cadastro para TESTE
+strcpy(pet[0].nick, "Bertin"); //Cadastro para TESTE
+strcpy( pet[0].esp, "Egipicio"); //Cadastro para TESTE
+strcpy(pet[0].raca, "Egipicio"); //Cadastro para TESTE
+strcpy(pet[0].sexo, "M"); //Cadastro para TESTE
+pet[0].idade = 1; //Cadastro para TESTE
+pet[0].ID = (10000); //Cadastro para TESTE
+
+strcpy(pet[1].dono, "Fulana de Tal"); //Cadastro para TESTE
+strcpy(pet[1].cell, "(44)98755-1455"); //Cadastro para TESTE
+strcpy(pet[1].nick, "Bob"); //Cadastro para TESTE
+strcpy( pet[1].esp, "Jacare"); //Cadastro para TESTE
+strcpy(pet[1].raca, "Chines"); //Cadastro para TESTE
+strcpy(pet[1].sexo, "F"); //Cadastro para TESTE
+pet[1].idade = 6; //Cadastro para TESTE
+pet[1].ID = (10001); //Cadastro para TESTE
+pet[1].banho[0].dia = 10; //Cadastro para TESTE
+pet[1].banho[0].mes = 12; //Cadastro para TESTE
+pet[1].banho[0].ano = 2019; //Cadastro para TESTE
+pet[1].banho[1].dia = 20; //Cadastro para TESTE
+pet[1].banho[1].mes = 1; //Cadastro para TESTE
+pet[1].banho[1].ano = 2020; //Cadastro para TESTE
+
+strcpy(pet[2].dono, "Ciclano"); //Cadastro para TESTE
+strcpy(pet[2].cell, "(45)89978-89258"); //Cadastro para TESTE
+strcpy(pet[2].nick, "Ken"); //Cadastro para TESTE
+strcpy( pet[2].esp, "Rato"); //Cadastro para TESTE
+strcpy(pet[2].raca, "Laptupip"); //Cadastro para TESTE
+strcpy(pet[2].sexo, "M"); //Cadastro para TESTE
+pet[2].idade = 2; //Cadastro para TESTE
+pet[2].ID = (10002); //Cadastro para TESTE
+pet[2].banho[0].dia = 18; //Cadastro para TESTE
+pet[2].banho[0].mes = 3; //Cadastro para TESTE
+pet[2].banho[0].ano = 2020; //Cadastro para TESTE
+
+strcpy(pet[3].dono, "Ciclana"); //Cadastro para TESTE
+strcpy(pet[3].cell, "(44)34535-1675"); //Cadastro para TESTE
+strcpy(pet[3].nick, "Litle Big"); //Cadastro para TESTE
+strcpy( pet[3].esp, "Porquinho"); //Cadastro para TESTE
+strcpy(pet[3].raca, "Indiano"); //Cadastro para TESTE
+strcpy(pet[3].sexo, "F"); //Cadastro para TESTE
+pet[3].idade = 14; //Cadastro para TESTE
+pet[3].ID = (10003); //Cadastro para TESTE
+//-------------------------------------------------------------
+
+	setlocale(LC_ALL, "Portuguese");  //Declarar a Linguagem Português, para a Utilização de Acentos
+	
+	char opcao = '1';  //Dar o valor de 1 para a variável "opcao"
+	
+	usleep(400000); //Pausa pequena
+		
+	printf("            ___   ___   __  __    __   __  ___   _  _   ___     ___    \n");           //Imprime o "Bem Vindo"
+	printf("           | _ ) | __| |  \\/  |   \\ \\ / / |_ _| | \\| | |   \\   / _ \\   \n");     //Imprime o "Bem Vindo"
+	printf("           | _ \\ | _|  | |\\/| |    \\ V /   | |  | .` | | |) | | (_) |  \n");        //Imprime o "Bem Vindo"
+	printf("           |___/ |___| |_|  |_|     \\_/   |___| |_|\\_| |___/   \\___/ \n");          //Imprime o "Bem Vindo"
+	 
+	usleep(400000); //Pausa pequena
+   
+	printf("\n                                    _  \n");       //Imprime o "A"
+	printf("                                   /_\\  \n");       //Imprime o "A"
+	printf("                                  / _ \\  \n");      //Imprime o "A"
+	printf("                                 /_/ \\_\\  \n");    //Imprime o "A"
+	
+	usleep(400000); //Pausa pequena
+	
+	printf("                                              ___            ");
+	printf("\n  _____    ___    _____    ___   __   __     ( _ )        ___   ___     _       \n");              //Imprime o "Totoy & Cia"
+	printf(" |_   _|  / _ \\  |_   _|  / _ \\  \\ \\ / /     / _ \\/\\     / __| |_ _|   /_\\      \n");         //Imprime o "Totoy & Cia"
+	printf("   | |   | (_) |   | |   | (_) |  \\ V /     | (_>  <    | (__   | |   / _ \\     \n");              //Imprime o "Totoy & Cia"
+	printf("   |_|    \\___/    |_|    \\___/    |_|       \\___/\\/     \\___| |___| /_/ \\_\\    \n");         //Imprime o "Totoy & Cia"
+	 
+	usleep(400000); //Pausa pequena
+	
+	printf("                                                                                 |\\_/|                  \n");        //Imprime um Cachorro
+	printf("                                                                           Au!   |o o|   Au! Au!          \n");       //Imprime um Cachorro
+	printf("                                                                                 |   <>              _    \n");       //Imprime um Cachorro
+	printf("                                                                        Au!      |  _/\\------____ ((| |))  \n");     //Imprime um Cachorro
+	printf("                                                                                 |               `--' |      \n");    //Imprime um Cachorro
+	printf("                                                                             ____|_       ___|   |___.'      \n");    //Imprime um Cachorro
+	printf("                                                                            /_/_____/____/_______|           \n");    //Imprime um Cachorro
+	
+	sleep(3); //Pausa pequena de 3 segundos
+	system("cls"); //Limpa a tela para imprimir o Menu
+	
+	// Imprimir o menu Principal
+	
+	while(opcao != '0') // Permite sempre voltar no menu principal 
+	{ 	
+		printf("\n        TOTOY & CIA  \n\n"); //Imprime o título
+		printf("\n  - Escolha uma opção - \n\n"); // Imprime o menu
+		printf(" 1 - Cadastro de animais \n"); //Opção 1 para o usuário escolher
+		printf(" 2 - Relatório de cadastros \n"); //Opção 2 para o usuário escolher
+		printf(" 3 - Busca de cadastros \n"); //Opção 3 para o usuário escolher
+		printf(" 4 - Editar/Excluir cadastros \n\n"); //Opção 4 para o usuário escolher
+		printf(" 5 - Banhos\n"); //Opção 5 para o usuário escolher
+		printf(" 6 - Relatório banhos\n\n"); //Opção 6 para o usuário escolher
+		printf(" 0 - Sair\n\n\n");//Última opção para o usuário escolher, na qual finaliza o programa 
+		
+		opcao = getch();//Permite que as escolhas do usuários não apareçam na tela
+		system("cls"); // Limpa tela
+
+		switch(opcao) //Verifica tecla digitada
+		 { 
+			case '1': // Se a tecla foi 1
+				cadastro(); // Cadastrara um animal
+				break;//Fim da escolha 1
+			
+			case '2': // Se a tecla foi 2
+				relatorio();// Imprime o relatorio de animais
+				break;//Fim da escolha 1
+				
+			case '3': // Se a tecla foi 3
+				printf("\n ID do Cliente para buscar: "); //Pergunta qual o ID desejado para a busca
+				scanf("%d", & geral.IDbusca);//Lê o ID desejado
+				busca(); // Busca de clientes/animais por ID cadastrados
+				break;//Fim da escolha 1
+				
+			case '4':// Se a tecla foi 4
+				editar();//Edita o cadastro
+				break;//Fim da escolha 1
+				
+			case '5':// Se a tecla foi 5
+				banhos();//Entra na função banhos
+				break;//Fim da escolha 1
+			
+			case '6':// Se a tecla foi 6
+				relatB();//Entra na função relat
+				break;//Fim da escolha 1
+			
+			default://Define o padrão
+				break;//Fim da escolha 1
+		}
+
+}
+    	//Caso o usuário escolha sair do programa
+	
+		printf("     ___     ___     ___     ___     ___     ___     ___     ___     ___     ___     ___  \n");                          //Imprime um agradecimento
+		printf(" ___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___  \n");           //Imprime um agradecimento
+		printf("/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\   \n");        //Imprime um agradecimento
+		printf("\\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/  \n");         //Imprime um agradecimento
+		printf("/   \\___/                                                                           \\___/   \\   \n");	             //Imprime um agradecimento 
+		printf("\\___/                    ___    _            _                    _                     \\___/    \n");                 //Imprime um agradecimento
+		printf("/   \\                   / _ \\  | |__   _ _  (_)  __ _   __ _   __| |  ___               /   \\  \n");                  //Imprime um agradecimento
+		printf("\\___/                  | (_) | | '_ \\ | '_| | | / _` | / _` | / _` | / _ \\              \\___/   \n");                //Imprime um agradecimento
+		printf("/   \\                   \\___/  |_.__/ |_|   |_| \\__, | \\__,_| \\__,_| \\___/              /   \\     \n");           //Imprime um agradecimento
+		printf("\\___/                                           |___/                                   \\___/    \n");                 //Imprime um agradecimento                         
+		printf("/   \\                                ___         _                                      /   \\    \n");                 //Imprime um agradecimento
+		printf("\\___/                               | _ \\  ___  | |  __ _                               \\___/      \n");              //Imprime um agradecimento
+		printf("/   \\                               |  _/ / -_) | | / _` |                              /   \\  \n");                   //Imprime um agradecimento
+		printf("\\___/                               |_|   \\___| |_| \\__,_|                              \\___/   \n");                //Imprime um agradecimento
+		printf("/   \\              ___                __                                 _              /   \\  \n");                   //Imprime um agradecimento
+		printf("\\___/             | _ \\  _ _   ___   / _|  ___   _ _   ___   _ _    __  (_)  __ _       \\___/     \n");               //Imprime um agradecimento
+		printf("/   \\             |  _/ | '_| / -_) |  _| / -_) | '_| / -_) | ' \\  / _| | | / _` |      /   \\   \n");                 //Imprime um agradecimento
+		printf("\\___/             |_|   |_|   \\___| |_|   \\___| |_|   \\___| |_||_| \\__| |_| \\__,_|      \\___/      \n");          //Imprime um agradecimento
+		printf("/   \\___                                                                             ___/   \\    \n");                 //Imprime um agradecimento
+		printf("\\___/   \\___     ___     ___     ___     ___     ___     ___     ___     ___     ___/   \\\___/   \n");                //Imprime um agradecimento
+		printf("/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\  \n");         //Imprime um agradecimento
+		printf("\\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \n");        //Imprime um agradecimento
+		printf("    \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \\___/   \n");             //Imprime um agradecimento
+
+		return 0; //Volta a 0 e sai do programa	
+}
+
+// ------------------------ RELATORIO --------------------------
+
+void relatorio() {  //Funções que não fornecem respostas
+	
+	
+	printf ("\n----------=- RELATORIO DE ANIMAIS CADASTRADOS -=----------\n\n"); //Printar o título
+	
+	for (int i = 0; i <= 99; i++ ) //Contador para a quantidade de relatórios que serão printados
+	 {
+		if (pet[i].dono[0] != '\0') //Condição para printar um relatório (Se a informação não existir, ela não será mostrada)
+		 {
+			printf("------------------------------\n\n");                           //Printar um espaço
+			printf(" Dono: %s\n", pet[i].dono);                                     //Printar o Nome do Dono
+			printf(" Número de Contato: %s\n", pet[i].cell);                        //Printar o Número para contato
+			printf(" Nome do animal: %s\n", pet[i].nick);                           //Printar o Nome do Animal
+			printf(" Espécie: %s\n", pet[i].esp);                                   //Printar a Espécie do Animal
+			printf(" Raça: %s\n", pet[i].raca);                                     //Printar a Raça
+			printf(" Sexo: %s\n", pet[i].sexo);                                     //Printar o Sexo
+			printf(" Idade do animal: %d Anos\n", pet[i].idade);                    //Printar a Idade
+			printf(" ID do Cliente: %d\n\n", pet[i].ID);                            //Printar o Id do Cliente
+			printf("-----------------------------\n\n");                            //Printar um espaço
+		}
+	} // i + 1
+	
+	getch();          //Ler sem mostrar 
+	system("cls");	  //Limpar a tela
+}
+
+//--------------------------- BUSCA ---------------------------
+
+void busca(){//Declarar uma função sem retorno chamada busca
+	int i; //Declara uma variável para o contador
+	system("cls");//Limpa a tela
+	char opcaoB = 'A';//Atribui um valor para a opção B
+	
+	if (geral.IDbusca<=9999||geral.IDbusca>=11000) //Verifica se o usuário inseriu um número que não possui no sistema
+	{
+		
+		printf("\n ERRO 404 :/ \n\n Desculpe, esse cadastro não existe");	//Printa um erro
+		getch(); //Permite digitar um valor e não aparecer no sistema
+		system("cls");	//Limpa a tela
+		opcaoB = '2'; //Atribui o valor de 2 para a opçãoB	
+	}
+	
+	for (i = 0 ; i <= 100 ; i++) //Declara um contador até 100 (Quantidade de animais que podem ser cadastrados)
+	{
+		if (pet[i].ID == geral.IDbusca)
+		{
+			geral.Save_i = i;                                         //Atribui o valor do contador na variável geral
+			printf("\n       Cliente Cadastrado com esse ID");        //Printar o Título
+			printf("\n------------------------------\n\n");           //Printar um espaço
+			printf(" Dono: %s\n", pet[i].dono);                       //Printar o Dono
+			printf(" Número de Contato: %s\n", pet[i].cell);          //Printar o Número para Contato
+			printf(" Nome do animal: %s\n", pet[i].nick);             //Printar o Nome do Animal
+			printf(" Espécie: %s\n", pet[i].esp);                     //Printar a Espécie
+			printf(" Raça: %s\n", pet[i].raca);                       //Printar a Raça
+			printf(" Sexo: %s\n", pet[i].sexo);                       //Printar o Sexo 
+			printf(" Idade do animal: %d Anos\n\n", pet[i].idade);    //Printar a Idade
+			printf("-----------------------------\n\n");              //Printar um espaço
+			break;	//Quebra
+		}
+
+	}
+			if (i>100) //Caso o usuário insira um Id errado
+		{
+			printf("\n Desculpe, não foi possivel achar esse cadastro... :/ \n\n Insira um novo ID para buscar novamente: "); //Mensagem de erro
+			scanf("%d",& geral.IDbusca); //Lê o novo Id
+			system("cls"); //Limpa a tela
+			busca(); //Chama a função busca
+		}
+		
+	printf("\n Cadastro correto? \n\n 1 - Sim \n 2 - Não \n"); //Verifica se o Id encontrado é o procurado
+	
+	if (opcaoB != '2') //Caso não
+	{
+	opcaoB = getch(); //Permite ler a escolha sem que apareça na tela
+	}
+	
+	switch(opcaoB) //Permite escolher entre as 2 opções
+	{
+		case '1': //Primeira escolha
+			break; //Fim
+			
+		case '2': //Segunda escolha
+			system("cls"); //Limpa a tela
+			printf("\n Insira o ID correto: "); //Printa um novo comando
+			scanf("%d",& geral.IDbusca); //Lê o novo Id para ser encontrado
+			system("cls"); //Limpa a tela
+			busca(); //Chama a função busca
+			break; //Fim
+	}
+	
+	
+	geral.IDbusca = 0;	//Atribui o valor 0 para a busca
+	system("cls");	//Limpa a tela
+}
+				
+// ------------------------- EDIÇÕES ---------------------------
+	
+void editar() { //Declarar uma função sem retorno chamada editar 
+	
+	char opcaoE = 'A'; //Atribuir o valor de A para a variável opçãoE
+	
+	while (opcaoE != '0') //Enquanto a opção do usuário for diferente que 0, executa o código abaixo
+	{	
+		printf("\n-------------=- EDITAR CADASTRO DO CLIENTE -=-------------\n\n"); //Printa o Título
+		printf(" 1 - Editar cadastro (por ID) \n 2 - Exluir cadastro (por ID) \n 3 - Emitir relatorio (se não souber o ID) \n\n 0 - Sair\n \n\n");  //Printa as opções de editar
+		
+		opcaoE = getch(); //Permite que o usuário escolha, sem que a opção apareça na tela
+		system("cls");    //Limpa a te
+		
+		switch(opcaoE) //Permite que o usuário escolha algo
+		{	
+
+//----------- Default -----------------------------------------------------------------------------------------------
+		
+			default: //Define o padrão
+				printf("\n Opção invalida..."); //Printa um erro
+				getch(); //Permite o usuário fazer alguma ação sem que apareça na tela
+				system("cls"); //Limpa a tela
+				break; //Fim
+
+
+//----------- Sair --------------------------------------------------------------------------------------------------	
+		
+			case '0': //Caso escolha 0
+				
+				opcaoE = '0'; //Caso o valor da opção seja 0
+				break; //Quebra o código
+				
+//----------- Emitir relatorio ---------------------------------------------------------------------------------------		
+		
+			case '3': //Caso escolha 3
+				
+				relatorio(); //Chama a função relatório
+				printf("\n-------------=- EDITAR CADASTRO DO CLIENTE -=-------------\n\n"); //Printa um título
+				break; //Quebra o código
+
+//----------- Exluir cadastro ----------------------------------------------------------------------------------------		
+				
+			case '2':                                                           //Caso escolha 2
+				int a;                                                          //Cria uma variável do tipo inteiro
+				char dec;                                                       //Cria uma variável do tipo caractér
+				printf("\n Insira o ID do cadastro que sera excluido: ");       //Printa uma informação
+				scanf("%d", & geral.IDbusca);                                   //Lê o Id desejado
+				busca();                                                        //Chama a função busca
+				a = geral.Save_i;                                               //Atribui um valor para (a)
+				printf("\n Certeza desse ação?\n");	                            //Printa uma pergunta
+				scanf("%s", & dec);                                             //Lê a escolha do usuário
+				  
+				if (dec=='s')                                                   //Condição de verdadeiro ou falso
+				{                                                               //Caso sim
+					pet[a].dono[0] = '\0';                                      //Atribui o valor do Dono para 0
+					pet[a].ID = 0;                                              //Atribui o valor do ID para 0
+					printf("\n Ação comcluida %c\n\n",a);	                    //Printa uma confirmação
+					break;                                                      //Fim
+				}
+				else                                                            //Caso não
+				{
+					printf("\n Ação cancelada\n");                              //Printa o cancelamento
+					break;                                                      //Fim
+				}
+				break;                                                          //Quebra o código
+				
+//----------- Editar cadastro -----------------------------------------------------------------------------------------			
+				
+			case '1':                                                               //Caso escolha 1
+				int i;                                                              //Atribui uma nova variável
+				printf("\n Insira o ID do cadastro: ");                             //Printa uma pergunta
+				scanf("%d", & geral.IDbusca);                                       //Lê o ID
+				                                                                    //Int i = busca();
+				busca();                                                            //Chama a variável busca
+				i = geral.Save_i;                                                   //Atribui um valor para i
+				printf("\n Oque você deseja alterar?");                             //Printa uma pergunta
+				 
+				char opcao1 = 'A';                                                  //Atribui uma nova váriavel do tipo caracter
+				
+				while(opcao1 != '0')                                                //Permite ficar no menu enquanto o usuário não sair
+				{
+					printf("\n\n------- Cadastro Atual --------\n\n 1 - Nome: %s \n 2 - Telefone: %s \n 3 - Nome do Animal: %s \n 4 - Espécie do animal: %s \n 5 - Raça do animal: %s \n 6 - Sexo do animal: %s \n 7 - Idade do animal \n\n 8 - Cancelar \n 9 - Concluido \n\n",pet[i].dono,pet[i].cell,pet[i].nick,pet[i].esp,pet[i].raca,pet[i].sexo,pet[i].idade); //Printa as informações sobre aquele cadastro
+					
+					opcao1 = getch();                                               //Permite a escolha da opção 1 não aparecer na tela
+					system("cls");                                                  //Limpa a tela
+					 
+					switch (opcao1)                                                 //Permite o usuário escolher uma opção
+					{
+					 
+						case '1':                                                   //Primeira escolha
+							printf("\n Insira a alterção no nome: ");               //Printa o que será modificado
+							scanf("%s", & pet[i].dono);                             //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código 
+								
+						case '2':                                                   //Segunda escolha
+							printf("\n Insira a alteção no telefone: ");            //Printa o que será modificado
+							scanf("%s", & pet[i].cell);                             //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						
+						case '3':                                                   //Terceira escolha
+							printf("\n Insira a alterção no nome do animal: ");     //Printa o que será modificado  
+							scanf("%s", & pet[i].nick);                             //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						
+						case '4':                                                   //Quarta escolha
+							printf("\n Insira a alterção na espécie: ");            //Printa o que será modificado
+							scanf("%s", & pet[i].esp);                              //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						
+						case '5':                                                   //Quinta escolha
+							printf("\n Insira a alteração na raça: ");              //Printa o que será modificado
+							scanf("%s", & pet[i].raca);                             //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						
+						case '6':                                                   //Sexta escolha
+							printf("\n Insira a alterção no sexo: ");               //Printa o que será modificado
+							scanf("%s", & pet[i].sexo);                             //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						 
+						case '7':                                                   //Sétima escolha
+							printf("\n Insira a alteração na idade do animal: ");   //Printa o que será modificado
+							scanf("%s", & pet[i].idade);                            //Lê a nova modificação feita pelo usuário
+							break;                                                  //Quebra o código
+						
+						case '8':                                                   //Oitava escolha
+							opcao1 = '0';                                           //Atribui o valor 0 para a opção e cancela a alteração
+							geral.Save_i=0;                                         //Atribui o valor 0 para a variável geral
+							break;                                                  //Quebra o código
+							
+						case '9':                                                   //Nona escolha
+							printf("\n Alteraçoes salvas com sucesso");             //Printa uma confirmação
+							geral.Save_i=0;                                         //Atribui o valor 0 para a variável geral
+							opcao1 = '0';                                           //Atribui o valor 0 para a opção
+							break;                                                  //Quebra o código
+					}
+				}
+			break;	                                                                //Quebra o código
+		}		
+	}
+}	
+
+// ------------------------- BANHOS ---------------------------
+
+void banhos() {//Declarar uma função sem retorno chamada banhos
+	
+	void cadastroB(void);//Chama a função
+	char opcao1 = 'A'; //Cria uma variável do tipo caracter, e atribui o valor de 'A' para ela
+	int i;//Cria uma variável do tipo inteiro
+	
+	while (opcao1 != '0')//Permite o usuário fazer escolhas até ele sair
+	{	
+		printf("\n ------------=- CADASTRO DE BANHOS -=--------------\n\n");//Printa um título
+		printf("\n 1 - Banho para hoje \n 2 - Marcar data para banho \n\n 3 - Cancelar \n 4 - Concluido\n\n");//Printa as opções do usuário
+		
+		opcao1 = getch();  //Permite o usuário escolher sem que apareça na tela
+		system("cls");     //Limpa a tela
+		
+		switch(opcao1)     //Permite o usuário escolher o que fazer
+		{	
+		
+		default: //Define o padrão
+				printf("\n Opção invalida..."); //Printa um erro
+				opcao1 = getch(); //Permite o usuário escolher sem que a escolha dele apareça
+				system("cls"); //Limpa a tela
+				break; //Fim
+		
+		case '4': //Quarta escolha
+				printf("\n As ações foram salvas! \n :D"); //Printa uma confirmação
+				opcao1 = '0'; //Atribui 0 para opção1
+				system("cls");//Limpa a tela
+				break;//Fim
+			
+		case '3'://Terceira escolha
+				opcao1 = '0';//Atribui 0 para opção1
+				system("cls");//Limpa a tela
+				break;//Fim
+				
+		case '2'://Segunda escolha
+				printf("\n Insira a data do banho: \n Dia: "); //Printa um comando
+				scanf("%d",& geral.dia); //Lê o dia
+				printf(" Mês: "); //Printa um comando
+				scanf("%d",& geral.mes);//Lê o mês
+				printf(" Ano: ");//Printa um comando
+				scanf("%d",& geral.ano);//Lê o ano
+				system("cls");//Limpa a tela
+				cadastroB();//Chama a função CadastroB
+				break;//Fim
+				
+			case '1'://Primeira escolha
+				
+				time_t mytime; //Declara um struct de "meu tempo"
+   				mytime = time(NULL);
+   				struct tm tm = *localtime(&mytime);
+   				geral.dia = tm.tm_mday; // Da valor do dia a varivel global
+   				geral.mes = tm.tm_mon + 1; // Da valor do mes mais 1 ao varivel global
+   				geral.ano = tm.tm_year + 1900; // Da valor do mes mais 1900 (so se salva 0-200) ao varivel global
+   				
+				printf("\n Banho cadastrado para hoje \n - Data: %d/%d/%d \n", geral.dia, geral.mes, geral.ano);//Printa a data do banho cadastrado
+				cadastroB();//Chama a função CadastroB
+				break;//Fim
+				
+		}	
+	}
+	
+}
+
+// -------------------- CADASTROS BANHO -----------------------
+
+void cadastroB(){ //Nova função sem retorno
+	
+	int save; //Nova variável	
+	
+	printf("\n Insira o ID do cadastro o qual marcara o banho: "); //Printa um comando
+	scanf("%d", & geral.IDbusca);//Lê o ID
+	system("cls");//Limpa a tela
+	busca();//Chama a função busca
+	save = geral.Save_i;//Atribui o valor encontrado para a variável save
+	
+	for (int i = 0 ; i <= 7 ; i++)
+	{
+		if (pet[save].banho[i].dia == 0 )
+		{
+			pet[save].banho[i].dia = geral.dia;
+			geral.dia = 0; //Atribui o valor 0
+			pet[save].banho[i].mes = geral.mes;		
+			geral.mes = 0; //Atribui o valor 0
+	 		pet[save].banho[i].ano = geral.ano;
+			geral.ano = 0; //Atribui o valor 0
+			printf("\n Banho marcado com sucesso \n\n Aguardamos você %s e seu pet %s em: %d/%d/%d \n                                                                       - TOTOY & Cia",pet[save].dono,pet[save].nick,pet[save].banho[i].dia,  pet[save].banho[i].mes,  pet[save].banho[i].ano);//Printa a data marcada para o banho
+			getch();//Sem retorno
+			system("cls");//Limpa tela
+			break;	//Fim
+		}	
+	}
+	}
+
+// -------------------- RELATORIO BANHO -----------------------
+
+void relatB(){ //Nova função sem retorno
+	
+	void sujinho(void); //Chama a função
+	int cont=0,ii; //Cria uma nova variável e atribui o valor 0 à ela
+	
+	printf ("\n--------=- RELATORIO DOS BANHOS DOS ANIMAIS  -=--------\n"); //Printa um título
+	
+	for (int i = 0; i <= 99; i++ ) //Contador
+	 {
+		if (pet[i].dono[0] != '\0') //Verificar se existe algum registro sobre o pet
+		{
+			printf("\n\n------------------------------------------------------\n"); //Printa um espaço
+			printf("\n O(A) %s ",pet[i].dono); //Printa o nome do dono
+			
+			for (ii = 0 ; ii <= 7; ii ++) //Percorrer
+			{
+				if(pet[i].banho[ii].dia != 0) //Caso há banhos registrados
+				{
+					cont++;//+1 para cont
+					if (cont != 1)//Se cont for diferente de 1
+					{
+					printf("\n Data do Banho: %d/%d/%d ",pet[i].banho[ii].dia, pet[i].banho[ii].mes, pet[i].banho[ii].ano);//Printa a data do banho marcado	
+					}
+					else //Se cont for igual a 1
+					{
+					printf("tem registro de banho marcado em seu pet %s! \n",pet[i].nick);
+					printf("\n Data do Banho: %d/%d/%d ",pet[i].banho[ii].dia, pet[i].banho[ii].mes, pet[i].banho[ii].ano);//Printa a data do banho marcado	
+					}
+				}
+				if(ii == 7 && cont == 0) //Caso não há banhos registrados
+				{
+	 				printf("\n Não se tem resgistro de banhos \n\n 'Poh dono me de um banho!' \n                                       - %s ",pet[i].nick); //Printa um pedido
+				}
+				
+			}
+			printf("\n\n------------------------------------------------------\n"); //Printa um espaço
+	   	}
+	cont=0;//zera o contador
+	} 
+	printf("\n\n------------------------------------------------------\n");//Printa um espaço
+	 
+	getch();//Sem retorno
+	system("cls");//Limpa a tela
+}
+	
+// ----------------------- CADASTROS --------------------------
+
+void cadastro() { //Declarar uma função sem retorno para o cadastro
+	system("cls"); //Limpar a tela
+
+	
+	printf ("\n----------=- CADASTRO DE ANIMAIS -=----------\n\n"); //Printar o título
+	
+	for (int i = 0; i <= 99; i++ )                    //Contador para cadastrar um animal
+	 {
+		if (pet[i].dono[0] == '\0')                   //Condição para cadastrar um animal
+		 {
+			printf("\n Dono: ");                      //Printar "Dono"
+			scanf("%s", pet[i].dono);                 //Ler o Nome do Dono
+			printf("\n Número de Contato: ");         //Printar "Número de Contato"
+			scanf("%s",pet[i].cell);                  //Ler o Número para Contato
+			printf("\n Nome do animal: ");            //Printar "Nome do Animal"
+			scanf("%s",pet[i].nick);                  //Ler o Nome do Animal
+			printf("\n Espécie: ");                   //Printar "Espécie"
+			scanf("%s",pet[i].esp);                   //Ler a espécie
+			printf("\n Raça: ");                      //Printar "Raça"
+			scanf("%s",pet[i].raca);                  //Ler a Raça
+			printf("\n Sexo: %s", pet[i].sexo);       //Printar "Sexo"
+			scanf("%s",pet[i].sexo);                  //Ler o Sexo do Animal
+			printf("\n Idade do animal: ");           //Printar "Idade do Animal"
+			scanf("%d", & pet[i].idade);              //Ler a Idade do Animal
+			pet[i].ID = i + 10000;                    //Declarar o Número de Identificação do Dono, sendo Equivalente ao Número que está no Contador, Somado com 10.000 
+
+			printf("Cliente Cadastrado com Sucesso\n ID (Numero de Identificação) do cliente/animal: %d",pet[i].ID); //Printar a Confirmação do Cadastro do Cliente
+			printf("----------------------------\n\n"); //Printar um Espaço
+			system("cls"); //Limpar a tela
+			break; //Quebrar o comando
+		}
+	} // i + 1
+}
+
+// Fim espero que tenhão gostado :D
